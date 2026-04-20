@@ -21,12 +21,48 @@ argument-hint: [ip]
 ## 流程总览
 
 ```
+阶段零：检测操作系统
 阶段一：收集信息
 阶段二：安装 3x-ui
 阶段三：延迟测试，选最优 SNI 域名
 阶段四：通过 API 自动配置（无需 Web 界面）
 阶段五：输出订阅链接 + 二维码
 ```
+
+---
+
+## 阶段零：检测操作系统
+
+在任何操作之前，先用 `Bash` 工具执行：
+
+```bash
+uname 2>/dev/null || echo "Windows"
+```
+
+- 返回 `Darwin` → **macOS 模式**，后续所有命令直接执行
+- 返回其他（`Windows` / `Linux`）→ **Windows 模式**，进入以下检查：
+
+### Windows 模式：WSL 检测与依赖安装
+
+**1. 检查 WSL 是否可用：**
+
+```bash
+wsl --version 2>&1
+```
+
+- 如果报错或提示未安装 → 告知用户需要先安装 WSL 2，引导访问：`https://aka.ms/wsl2`，流程中止
+- 如果成功输出版本号 → 继续
+
+**2. 在 WSL 中安装依赖：**
+
+```bash
+wsl apt-get install -y sshpass qrencode 2>&1
+```
+
+**3. 记录模式为 Windows，后续所有远程命令加 `wsl` 前缀：**
+
+- macOS：`sshpass -p '...' ssh ...`
+- Windows：`wsl sshpass -p '...' ssh ...`
 
 ---
 
