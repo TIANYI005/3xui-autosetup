@@ -8,7 +8,7 @@ One command. No web UI. QR code in your terminal.
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![3x-ui](https://img.shields.io/badge/panel-3x--ui%20v2.8.11-orange.svg)
 ![Protocol](https://img.shields.io/badge/protocol-VLESS%20%2B%20Reality-brightgreen.svg)
-![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)
+![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20(WSL)-lightgrey.svg)
 
 </div>
 
@@ -56,6 +56,8 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 - `qrencode` — `brew install qrencode`
 - A fresh VPS with root SSH access (Rocky Linux 9 / Ubuntu / Debian recommended)
 - Ports **80** and **443** open on the VPS
+
+> **Windows users:** WSL 2 is required. The skill will auto-detect Windows, install `sshpass` and `qrencode` inside WSL, and prefix all commands accordingly. If WSL is not installed, see [aka.ms/wsl2](https://aka.ms/wsl2).
 
 ## Installation
 
@@ -170,6 +172,8 @@ cp vps.md ~/.claude/commands/vps.md
 - macOS + Claude Code
 - `brew install sshpass qrencode`
 - 开放端口 80、443 的全新 VPS（Rocky Linux 9 / Ubuntu / Debian）
+
+> **Windows 用户**：需要安装 WSL 2，skill 会自动检测并在 WSL 内安装依赖。未安装 WSL 请参考 [aka.ms/wsl2](https://aka.ms/wsl2)。
 
 ---
 
