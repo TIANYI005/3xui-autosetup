@@ -19,7 +19,7 @@ One command. No web UI. QR code in your terminal.
 `/vps` is a [Claude Code](https://claude.ai/code) slash command that provisions a complete VLESS+Reality proxy node from scratch — SSH into a fresh VPS, install [3x-ui](https://github.com/MHSanaei/3x-ui), run SNI latency tests, configure via API, and print a scannable QR code — all without touching a web browser.
 
 ```
-/vps 45.78.59.156 22 yourpassword
+/vps 1.2.3.4 22 yourpassword
 ```
 
 ## Why 3x-ui + xray-core?
@@ -82,7 +82,7 @@ cp vps.md ~/.claude/commands/vps.md
 **Example:**
 
 ```
-/vps 45.78.59.156 22 mypassword
+/vps 1.2.3.4 22 mypassword
 ```
 
 The skill walks through five stages automatically:
