@@ -43,7 +43,7 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 
 | Client | Platform | Status |
 |--------|----------|--------|
-| Shadowrocket | iOS | ✅ Verified |
+| Shadowrocket | iOS / macOS | ✅ Verified |
 | v2rayN | Windows | ✅ Compatible |
 | NekoBox | Android | ✅ Compatible |
 | Hiddify | macOS / Android | ✅ Compatible |
