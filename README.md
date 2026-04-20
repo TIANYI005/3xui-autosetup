@@ -19,7 +19,7 @@ One command. No web UI. QR code in your terminal.
 `/vps` is a [Claude Code](https://claude.ai/code) slash command that provisions a complete VLESS+Reality proxy node from scratch — SSH into a fresh VPS, install [3x-ui](https://github.com/MHSanaei/3x-ui), run SNI latency tests, configure via API, and print a scannable QR code — all without touching a web browser.
 
 ```
-/vps YOUR_VPS_IP 22 YOUR_ROOT_PASSWORD
+/vps YOUR_VPS_IP YOUR_SSH_PORT YOUR_ROOT_PASSWORD
 ```
 
 ## Why 3x-ui + xray-core?
@@ -72,6 +72,13 @@ Or manually:
 cp vps.md ~/.claude/commands/vps.md
 ```
 
+## Security Disclaimer
+
+> **Your root password is passed as a command-line argument and used only within the current Claude Code session. It is never written to disk, logged, or sent anywhere other than the SSH connection to your own VPS. That said, be aware that:**
+> - Anyone with access to your Claude Code session can see the password in the conversation history
+> - Avoid using this skill on shared or untrusted machines
+> - Consider changing your root password or switching to key-based SSH auth after setup
+
 ## Usage
 
 ```
@@ -79,10 +86,12 @@ cp vps.md ~/.claude/commands/vps.md
 /vps <ip> <ssh-port> <root-password>
 ```
 
+> **Note on SSH port:** Many VPS providers use port `22` by default, but some (e.g. BandwagonHost) assign a non-standard port. Check your provider's control panel if you're unsure. If you omit the port, the skill will ask you.
+
 **Example:**
 
 ```
-/vps YOUR_VPS_IP 22 YOUR_ROOT_PASSWORD
+/vps YOUR_VPS_IP YOUR_SSH_PORT YOUR_ROOT_PASSWORD
 ```
 
 The skill walks through five stages automatically:
@@ -144,11 +153,17 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 cp vps.md ~/.claude/commands/vps.md
 ```
 
+### 安全提示
+
+> root 密码仅在当前 Claude Code session 中使用，不会写入磁盘或上传至任何第三方。但请注意：不要在共享或不受信任的设备上使用此 skill，建议配置完成后改用 SSH 密钥登录。
+
 ### 使用
 
 ```
 /vps <IP地址> <SSH端口> <root密码>
 ```
+
+> **关于 SSH 端口**：大多数 VPS 默认为 22 端口，但部分服务商（如 BandwagonHost）会分配非标准端口，请在控制面板确认。如果不填端口，skill 会主动询问。
 
 ### 前置条件
 
