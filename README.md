@@ -51,13 +51,11 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 
 ## Prerequisites
 
-- macOS with [Claude Code](https://claude.ai/code) installed
-- `sshpass` — `brew install sshpass`
-- `qrencode` — `brew install qrencode`
+- macOS or Windows with [Claude Code](https://claude.ai/code) installed
+- **macOS:** `sshpass` and `qrencode` — `brew install sshpass qrencode`
+- **Windows:** WSL 2 required — the skill auto-detects Windows and installs `sshpass` / `qrencode` inside WSL. If WSL is not installed, see [aka.ms/wsl2](https://aka.ms/wsl2)
 - A fresh VPS with root SSH access (Rocky Linux 9 / Ubuntu / Debian recommended)
 - Ports **80** and **443** open on the VPS
-
-> **Windows users:** WSL 2 is required. The skill will auto-detect Windows, install `sshpass` and `qrencode` inside WSL, and prefix all commands accordingly. If WSL is not installed, see [aka.ms/wsl2](https://aka.ms/wsl2).
 
 ## Installation
 
@@ -96,9 +94,10 @@ cp vps.md ~/.claude/commands/vps.md
 /vps 1.2.3.4 22 mypassword
 ```
 
-The skill walks through five stages automatically:
+The skill walks through six stages automatically:
 
 ```
+Stage 0 — Detect OS (macOS or Windows/WSL), install dependencies if needed
 Stage 1 — Collect info (or read from arguments)
 Stage 2 — Install 3x-ui + issue Let's Encrypt IP cert
 Stage 3 — Latency test 20 SNI domains, pick the fastest
@@ -116,7 +115,7 @@ Stage 5 — Print subscription link + QR code
 
 ## How It Works
 
-The skill uses `sshpass` to run commands remotely without an interactive session. The 3x-ui panel is configured entirely through its REST API — no browser, no clicking. The Python setup script runs on the VPS itself to avoid firewall issues with the panel port.
+The skill uses `sshpass` (macOS) or `wsl sshpass` (Windows) to run commands remotely without an interactive session. The 3x-ui panel is configured entirely through its REST API — no browser, no clicking. The Python setup script runs on the VPS itself to avoid firewall issues with the panel port.
 
 ```
 Local machine                        VPS
@@ -169,11 +168,10 @@ cp vps.md ~/.claude/commands/vps.md
 
 ### 前置条件
 
-- macOS + Claude Code
-- `brew install sshpass qrencode`
+- macOS 或 Windows + Claude Code
+- **macOS**：`brew install sshpass qrencode`
+- **Windows**：需要 WSL 2，skill 会自动检测并在 WSL 内安装依赖。未安装 WSL 请参考 [aka.ms/wsl2](https://aka.ms/wsl2)
 - 开放端口 80、443 的全新 VPS（Rocky Linux 9 / Ubuntu / Debian）
-
-> **Windows 用户**：需要安装 WSL 2，skill 会自动检测并在 WSL 内安装依赖。未安装 WSL 请参考 [aka.ms/wsl2](https://aka.ms/wsl2)。
 
 ---
 
