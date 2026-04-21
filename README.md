@@ -66,16 +66,22 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 
 ## Installation
 
-```bash
-curl -o ~/.claude/commands/vps.md \
-  https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/vps.md
-```
-
-Or manually:
+**Option 1 — One command:**
 
 ```bash
-cp vps.md ~/.claude/commands/vps.md
+curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/install.sh | bash
 ```
+
+**Option 2 — Ask Claude to install it for you:**
+
+Copy the message below and send it to Claude Code:
+
+```
+Please install the /vps skill by running:
+curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/install.sh | bash
+```
+
+Claude will run the install script and confirm when done.
 
 ## Usage
 
