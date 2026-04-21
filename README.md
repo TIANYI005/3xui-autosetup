@@ -44,7 +44,7 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 - **Secure by default** — random panel credentials generated on every run; panel port bound to `127.0.0.1` only after setup (never exposed to the internet)
 - **SSH tunnel for panel access** — manage 3x-ui via `ssh -L` forwarding; no public management port
 - **Config saved locally** — credentials and VLESS link written to `~/.vps/<IP>.txt` after each run
-- **Credential safety** — scripts run directly from source; only API config scripts are staged to `/tmp` and wiped at the start of every run
+- **No /tmp staging** — all scripts run directly from source; nothing sensitive is written to `/tmp` on the local machine
 
 ## Client Compatibility
 
@@ -185,7 +185,14 @@ The `addClient` API is called separately from `inbounds/add` — this is intenti
 
 **Stage 2 interrupted (install incomplete):** Re-run `vps_postinstall.py` — it detects distro, registers the correct service file, starts x-ui, and resets credentials in one pass. Only re-run `vps_install.py` if the x-ui binary itself is missing.
 
-**Stage 4 failed (API error):** Re-run `vps_run_setup.py` directly — it is idempotent.
+**Stage 4 failed (API error):** Re-run the same Stage 4 command — it is idempotent:
+
+```bash
+python3 ~/.claude/commands/3xui-autosetup/vps_run_setup.py \
+  "<IP>" <SSH_PORT> '<PASSWORD>' \
+  <PANEL_PORT> "<WEBBASEPATH>" "<PANEL_USERNAME>" "<PANEL_PASSWORD>" \
+  "<SNI>" "<NODE_NAME>"
+```
 
 **Forgot panel password:** Check `~/.vps/<IP>.txt`, or SSH into the VPS and run:
 ```bash
@@ -225,7 +232,7 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 - **跨发行版 VPS** — 自动检测 Debian/Ubuntu、RHEL/Rocky/CentOS/CentOS Stream、Arch，注册对应的 systemd service 文件
 - **智能 SNI 选择** — 对 20 个域名做延迟测试，自动选最快的
 - **安全默认配置** — 每次运行随机生成面板凭据；面板端口在配置完成后绑定到 `127.0.0.1`，从公网彻底消失
-- **凭据安全** — 脚本直接从源文件运行；仅 API 配置脚本写入 `/tmp` 并在每次运行开始时清除
+- **本地无 /tmp 暂存** — 所有脚本直接从源文件运行，本地不写入任何敏感内容到 `/tmp`
 - **本地存档** — 节点链接和面板凭据写入 `~/.vps/<IP>.txt`（权限 600）
 
 ### 已验证系统
@@ -347,7 +354,14 @@ python3 ~/.claude/commands/3xui-autosetup/vps_postinstall.py "<IP>" <SSH_PORT> '
 
 如果 x-ui 二进制完全不存在，才需要重新运行完整安装。
 
-**阶段四失败（API 报错）：** 重新运行 `python3 /tmp/vps_run_setup.py`，脚本是幂等的。
+**阶段四失败（API 报错）：** 重新运行阶段四的同一条命令，脚本是幂等的：
+
+```bash
+python3 ~/.claude/commands/3xui-autosetup/vps_run_setup.py \
+  "<IP>" <SSH_PORT> '<PASSWORD>' \
+  <PANEL_PORT> "<WEBBASEPATH>" "<PANEL_USERNAME>" "<PANEL_PASSWORD>" \
+  "<SNI>" "<NODE_NAME>"
+```
 
 **忘记面板密码：** 查 `~/.vps/<IP>.txt`，或 SSH 进 VPS 执行：
 
