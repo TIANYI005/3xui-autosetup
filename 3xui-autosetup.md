@@ -13,7 +13,7 @@ argument-hint: [ip] [port] [password]
 - 如果只有 IP，跳过询问 IP，继续询问端口和密码
 - 如果为空，从阶段一开始依次询问
 
-脚本模板目录：`~/.claude/commands/vps/`
+脚本模板目录：`~/.claude/commands/3xui-autosetup/`
 
 ---
 

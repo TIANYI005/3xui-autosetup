@@ -16,10 +16,10 @@ One command. No web UI. QR code in your terminal.
 
 ## Overview
 
-`/vps` is a [Claude Code](https://claude.ai/code) slash command that provisions a complete VLESS+Reality proxy node from scratch — SSH into a fresh VPS, install [3x-ui](https://github.com/MHSanaei/3x-ui), run SNI latency tests, configure via API, and print a scannable QR code — all without touching a web browser.
+`/3xui-autosetup` is a [Claude Code](https://claude.ai/code) slash command that provisions a complete VLESS+Reality proxy node from scratch — SSH into a fresh VPS, install [3x-ui](https://github.com/MHSanaei/3x-ui), run SNI latency tests, configure via API, and print a scannable QR code — all without touching a web browser.
 
 ```
-/vps <ip> <ssh-port> <root-password>
+/3xui-autosetup <ip> <ssh-port> <root-password>
 ```
 
 **Only requirement: Python 3 with `paramiko` and `qrcode`.** No brew, no WSL, no system tools.
@@ -91,7 +91,7 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/insta
 Copy the message below and send it to Claude Code:
 
 ```
-Please install the /vps skill by running:
+Please install the /3xui-autosetup skill by running:
 curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/install.sh | bash
 ```
 
@@ -100,8 +100,8 @@ Claude will run the install script and confirm when done.
 ## Usage
 
 ```
-/vps <ip>
-/vps <ip> <ssh-port> <root-password>
+/3xui-autosetup <ip>
+/3xui-autosetup <ip> <ssh-port> <root-password>
 ```
 
 > **SSH port:** Most VPS providers default to `22`, but some (e.g. BandwagonHost) assign a non-standard port. Check your provider's control panel if unsure. If omitted, the skill will ask.
@@ -109,7 +109,7 @@ Claude will run the install script and confirm when done.
 **Example:**
 
 ```
-/vps 1.2.3.4 22 mypassword
+/3xui-autosetup 1.2.3.4 22 mypassword
 ```
 
 The skill walks through five stages automatically:
@@ -199,7 +199,7 @@ This project installs and configures **[3x-ui](https://github.com/MHSanaei/3x-ui
 
 </div>
 
-`/vps` 是一个 [Claude Code](https://claude.ai/code) slash command，一条命令完成 VLESS+Reality 节点全流程搭建——SSH 登录、安装 3x-ui、SNI 延迟测试、API 配置、终端输出二维码，全程无需打开浏览器。
+`/3xui-autosetup` 是一个 [Claude Code](https://claude.ai/code) slash command，一条命令完成 VLESS+Reality 节点全流程搭建——SSH 登录、安装 3x-ui、SNI 延迟测试、API 配置、终端输出二维码，全程无需打开浏览器。
 
 **唯一依赖：Python 3 + `pip install paramiko qrcode`。无需 brew、WSL 或任何系统工具。**
 
@@ -254,14 +254,14 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/insta
 把下面这句话复制给 Claude Code：
 
 ```
-请帮我运行以下命令安装 /vps skill：
+请帮我运行以下命令安装 /3xui-autosetup skill：
 curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/install.sh | bash
 ```
 
 ### 使用
 
 ```
-/vps <IP地址> <SSH端口> <root密码>
+/3xui-autosetup <IP地址> <SSH端口> <root密码>
 ```
 
 > **关于 SSH 端口**：大多数 VPS 默认为 22 端口，部分服务商（如 BandwagonHost）会分配非标准端口，请在控制面板确认。不填端口时 skill 会主动询问。
@@ -269,7 +269,7 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/insta
 **示例：**
 
 ```
-/vps 1.2.3.4 22 mypassword
+/3xui-autosetup 1.2.3.4 22 mypassword
 ```
 
 自动走完以下五个阶段：
