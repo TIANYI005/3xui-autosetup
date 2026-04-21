@@ -36,7 +36,7 @@ argument-hint: [ip] [port] [password]
 用 `Bash` 工具执行（先清理上次遗留的临时脚本，防止旧密码残留）：
 
 ```bash
-rm -f /tmp/vps_install.py /tmp/vps_postinstall.py /tmp/vps_latency.py /tmp/setup_vps.py /tmp/vps_run_setup.py /tmp/vps_qr.py
+rm -f /tmp/vps_install.py /tmp/vps_postinstall.py /tmp/vps_latency.py /tmp/setup_vps.py /tmp/vps_run_setup.py
 python3 -c "import paramiko, qrcode" 2>/dev/null && echo "OK" || echo "MISSING"
 ```
 
@@ -148,16 +148,11 @@ python3 /tmp/vps_run_setup.py
 
 ## 阶段五：输出订阅链接
 
-读取 `~/.claude/commands/3xui-autosetup/vps_qr.py`，替换以下占位符后写入 `/tmp/vps_qr.py`：
-
-- `<LINK>`
-- `<IP>`、`<PANEL_PORT>`、`<WEBBASEPATH>`
-- `<PANEL_USERNAME>`、`<PANEL_PASSWORD>`
-
-运行：
+直接调用脚本，无需读取模板或替换占位符：
 
 ```bash
-python3 /tmp/vps_qr.py
+python3 ~/.claude/commands/3xui-autosetup/vps_qr.py \
+  "<LINK>" "<IP>" "<PANEL_PORT>" "<WEBBASEPATH>" "<PANEL_USERNAME>" "<PANEL_PASSWORD>"
 ```
 
 ---

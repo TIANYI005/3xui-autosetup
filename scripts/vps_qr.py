@@ -1,11 +1,10 @@
-import qrcode, os, datetime
+import qrcode, os, datetime, sys
 
-LINK        = "<LINK>"
-VPS_IP      = "<IP>"
-PANEL_PORT  = "<PANEL_PORT>"
-WEBBASEPATH = "<WEBBASEPATH>"
-PANEL_USER  = "<PANEL_USERNAME>"
-PANEL_PASS  = "<PANEL_PASSWORD>"
+if len(sys.argv) != 7:
+    print("Usage: vps_qr.py <LINK> <IP> <PANEL_PORT> <WEBBASEPATH> <PANEL_USERNAME> <PANEL_PASSWORD>")
+    sys.exit(1)
+
+LINK, VPS_IP, PANEL_PORT, WEBBASEPATH, PANEL_USER, PANEL_PASS = sys.argv[1:]
 
 panel_path  = WEBBASEPATH.strip("/")
 local_panel = f"http://localhost:{PANEL_PORT}" + (f"/{panel_path}" if panel_path else "")
