@@ -38,7 +38,7 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 - **SSH port auto-detection** — probes port 22 via Python socket before asking; skips the question if it's open (with 3-retry backoff for freshly reset VPS); works on Windows, macOS, and Linux without `nc`
 - **Custom node display name** — name your node anything you want (e.g. `Tokyo-Q1`); appears in Shadowrocket, v2rayN, and any other client
 - **Pure Python** — uses `paramiko` for SSH and `qrcode`/`pillow` for output; no `openssl`, no `nc`, no system tools required on any platform
-- **Cross-platform** — macOS, Windows (Git Bash), Linux; auto-detects `python3`/`python`/`py` command
+- **Cross-platform** — macOS, Windows (Git Bash), Linux; auto-detects `python3`/`python`/`py` command; MSYS2 path conversion for panel paths handled automatically in-script (no `MSYS_NO_PATHCONV` needed)
 - **Cross-distro VPS** — auto-detects Debian/Ubuntu, RHEL/Rocky/CentOS, Arch and registers the correct systemd service file
 - **Smart SNI selection** — latency-tests 20 domains across Microsoft, Apple, NVIDIA, AWS, Cloudflare, Akamai and picks the fastest
 - **Secure by default** — random panel credentials generated on every run; panel port bound to `127.0.0.1` only after setup (never exposed to the internet)
@@ -239,7 +239,7 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 - **SSH 端口自动探测** — 用 Python socket 探测 22 端口是否开放（3 次重试，每次间隔 2 秒，兼容刚重置的 VPS）；无需 `nc`，Windows / macOS / Linux 全平台可用
 - **自定义节点名称** — 可以给节点起任意名称（如 `Tokyo-01`），直接显示在 Shadowrocket、v2rayN 等客户端的节点列表里
 - **纯 Python 实现** — paramiko 负责 SSH，qrcode + pillow 输出二维码；无需 `openssl`、`nc` 或任何系统工具
-- **跨平台本地运行** — macOS、Windows（Git Bash）、Linux 均可；自动探测 `python3` / `python` / `py` 命令
+- **跨平台本地运行** — macOS、Windows（Git Bash）、Linux 均可；自动探测 `python3` / `python` / `py` 命令；Git Bash 下 MSYS2 路径转换由脚本内部自动处理，无需设置 `MSYS_NO_PATHCONV`
 - **跨发行版 VPS** — 自动检测 Debian/Ubuntu、RHEL/Rocky/CentOS/CentOS Stream、Arch，注册对应的 systemd service 文件
 - **智能 SNI 选择** — 对 20 个域名做延迟测试，自动选最快的
 - **安全默认配置** — 每次运行随机生成面板凭据；面板端口在配置完成后绑定到 `127.0.0.1`，从公网彻底消失
