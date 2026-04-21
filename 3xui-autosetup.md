@@ -55,21 +55,7 @@ pip3 install paramiko qrcode
 **未提供端口时，先做 22 端口探测，再决定是否询问（最多重试 3 次，每次间隔 2 秒，应对 VPS 刚重置 SSH 尚未就绪的情况）：**
 
 ```bash
-python3 -c "
-import socket, time
-for i in range(3):
-    s = socket.socket()
-    s.settimeout(3)
-    r = s.connect_ex(('<IP>', 22))
-    s.close()
-    if r == 0:
-        print('open')
-        break
-    if i < 2:
-        time.sleep(2)
-else:
-    print('closed')
-"
+result=closed; for i in 1 2 3; do nc -z -w3 <IP> 22 2>/dev/null && result=open && break; [ $i -lt 3 ] && sleep 2; done; echo $result
 ```
 
 - 输出 `open` → SSH 端口确认为 22，**跳过端口询问**，告知用户"已自动检测到端口 22"
@@ -121,19 +107,13 @@ python3 ~/.claude/commands/3xui-autosetup/vps_latency.py "<IP>" <SSH_PORT> '<PAS
 
 ## 阶段四：API 自动配置
 
-读取 `~/.claude/commands/3xui-autosetup/setup_vps.py`，替换以下占位符后写入 `/tmp/setup_vps.py`：
-
-- `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>`
-- `<PANEL_PORT>`（数字，不加引号）
-- `<WEBBASEPATH>`
-- `<PANEL_USERNAME>`、`<PANEL_PASSWORD>`
-- `<SNI_DOMAIN>`
-- `<NODE_NAME>` → 用户输入的节点名称（字符串，加引号）
-
-读取 `~/.claude/commands/3xui-autosetup/vps_run_setup.py`，替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_run_setup.py` 并运行：
+直接调用脚本（密码含特殊字符时用单引号包裹）：
 
 ```bash
-python3 /tmp/vps_run_setup.py
+python3 ~/.claude/commands/3xui-autosetup/vps_run_setup.py \
+  "<IP>" <SSH_PORT> '<PASSWORD>' \
+  <PANEL_PORT> "<WEBBASEPATH>" "<PANEL_USERNAME>" "<PANEL_PASSWORD>" \
+  "<SNI_DOMAIN>" "<NODE_NAME>"
 ```
 
 从输出中提取 `LINK=...` 的值。
@@ -153,9 +133,9 @@ python3 ~/.claude/commands/3xui-autosetup/vps_qr.py \
 
 ## 故障恢复
 
-**阶段二中断**：直接重新运行 `/tmp/vps_postinstall.py`，它会自动检测并修复（如文件不存在，重新 Read 写入）。只有 x-ui 二进制完全缺失时才需重跑 `vps_install.py`。
+**阶段二中断**：直接重新运行 postinstall，它会自动检测并修复。只有 x-ui 二进制完全缺失时才需重跑 install。
 
-**阶段四报错**：重新运行 `python3 /tmp/vps_run_setup.py`，脚本幂等。
+**阶段四报错**：重新运行同一条 `vps_run_setup.py` 命令，脚本幂等。
 
 **忘记面板密码**：查 `~/.vps/<IP>.txt`，或 SSH 进 VPS：
 

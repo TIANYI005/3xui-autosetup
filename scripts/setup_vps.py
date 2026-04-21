@@ -1,12 +1,16 @@
-import urllib.request, json, subprocess, ssl, http.cookiejar, base64, uuid as _uuid
+import urllib.request, json, subprocess, ssl, http.cookiejar, base64, uuid as _uuid, sys
 
-PANEL_PORT  = <PANEL_PORT>
-WEBBASEPATH = "<WEBBASEPATH>"
-USER        = "<PANEL_USERNAME>"
-PASS        = "<PANEL_PASSWORD>"
-VPS_IP      = "<IP>"
-SNI         = "<SNI_DOMAIN>"
-NODE_NAME   = "<NODE_NAME>"
+if len(sys.argv) != 8:
+    print("Usage: setup_vps.py <PANEL_PORT> <WEBBASEPATH> <PANEL_USERNAME> <PANEL_PASSWORD> <VPS_IP> <SNI> <NODE_NAME>")
+    sys.exit(1)
+
+PANEL_PORT  = int(sys.argv[1])
+WEBBASEPATH = sys.argv[2]
+USER        = sys.argv[3]
+PASS        = sys.argv[4]
+VPS_IP      = sys.argv[5]
+SNI         = sys.argv[6]
+NODE_NAME   = sys.argv[7]
 PORT        = 443
 
 def make_opener(scheme):
