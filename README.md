@@ -34,7 +34,9 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 
 ## Features
 
-- **Single command setup** — pass IP, SSH port, and password; the rest is automatic
+- **Single command setup** — pass IP and password (port auto-detected); the rest is automatic
+- **SSH port auto-detection** — probes port 22 before asking; skips the question if it's open (with 3-retry backoff for freshly reset VPS)
+- **Custom node display name** — name your node anything you want (e.g. `Tokyo-Q1`); appears in Shadowrocket, v2rayN, and any other client
 - **Pure Python** — uses `paramiko` for SSH and `qrcode` for terminal output; no system tools required
 - **Cross-platform** — macOS, Windows, Linux (anything with Python 3)
 - **Cross-distro VPS** — auto-detects Debian/Ubuntu, RHEL/Rocky/CentOS, Arch and registers the correct systemd service file
@@ -100,29 +102,33 @@ Claude will run the install script and confirm when done.
 ## Usage
 
 ```
-/3xui-autosetup <ip>
+/3xui-autosetup <ip> <root-password>
 /3xui-autosetup <ip> <ssh-port> <root-password>
 ```
 
-> **SSH port:** Most VPS providers default to `22`, but some (e.g. BandwagonHost) assign a non-standard port. Check your provider's control panel if unsure. If omitted, the skill will ask.
+- **2 arguments** — IP + password; port 22 is probed automatically (3 retries, 2s apart). If detected open, no question asked. If closed, the skill asks for the port.
+- **3 arguments** — IP + SSH port + password; all three are set directly, no prompts for connection info.
+- **Node display name** — always asked during Stage 1, regardless of arguments. Defaults to `vless-reality`.
 
-**Example:**
+**Examples:**
 
 ```
+/3xui-autosetup 1.2.3.4 mypassword
 /3xui-autosetup 1.2.3.4 22 mypassword
+/3xui-autosetup 1.2.3.4 2222 mypassword
 ```
 
 The skill walks through five stages automatically:
 
 ```
 Stage 0 — Wipe any stale /tmp scripts; check local Python deps (paramiko, qrcode)
-Stage 1 — Collect VPS info (or read from arguments)
+Stage 1 — Probe SSH port 22 (auto-skip if open); ask for node display name
 Stage 2 — Install 3x-ui on VPS; auto-register systemd service for the detected distro;
            reset panel credentials to a random password
 Stage 3 — Latency-test 20 SNI domains; pick the fastest
 Stage 4 — API config: generate X25519 keypair + UUID; create VLESS+Reality inbound via
            addClient API; restrict panel to localhost
-Stage 5 — Print VLESS link + QR code; save config to ~/.vps/<IP>.txt
+Stage 5 — Print VLESS link + QR code (node name shown in client); save config to ~/.vps/<IP>.txt
 ```
 
 ## Security Model
@@ -211,7 +217,9 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 
 ### 功能特点
 
-- **一条命令搞定** — 传入 IP、SSH 端口和密码，其余全自动
+- **一条命令搞定** — 传入 IP 和密码，其余全自动（端口自动探测）
+- **SSH 端口自动探测** — 优先探测 22 端口是否开放（3 次重试，每次间隔 2 秒，兼容刚重置的 VPS）；探测到则直接跳过端口询问
+- **自定义节点名称** — 可以给节点起任意名称（如 `搬瓦工-日本`），直接显示在 Shadowrocket、v2rayN 等客户端的节点列表里
 - **纯 Python 实现** — paramiko 负责 SSH，qrcode 打印二维码，无需任何系统工具
 - **跨平台本地运行** — macOS、Windows、Linux 均可，有 Python 3 即可
 - **跨发行版 VPS** — 自动检测 Debian/Ubuntu、RHEL/Rocky/CentOS/CentOS Stream、Arch，注册对应的 systemd service 文件
@@ -261,27 +269,32 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/insta
 ### 使用
 
 ```
+/3xui-autosetup <IP地址> <root密码>
 /3xui-autosetup <IP地址> <SSH端口> <root密码>
 ```
 
-> **关于 SSH 端口**：大多数 VPS 默认为 22 端口，部分服务商（如 BandwagonHost）会分配非标准端口，请在控制面板确认。不填端口时 skill 会主动询问。
+- **传 2 个参数**（IP + 密码）：自动探测 22 端口是否开放，开放则直接跳过端口询问；探测失败时会询问端口号
+- **传 3 个参数**（IP + 端口 + 密码）：连接信息全部来自参数，不询问
+- **节点名称**：无论传几个参数，阶段一都会询问节点名称（默认 `vless-reality`）
 
 **示例：**
 
 ```
+/3xui-autosetup 1.2.3.4 mypassword
 /3xui-autosetup 1.2.3.4 22 mypassword
+/3xui-autosetup 1.2.3.4 2222 mypassword
 ```
 
 自动走完以下五个阶段：
 
 ```
 阶段零 — 清除 /tmp 下的旧脚本；检查本地 Python 依赖（paramiko、qrcode）
-阶段一 — 收集 VPS 信息（或从参数直接读取）
+阶段一 — 探测 SSH 22 端口（开放则跳过询问）；询问节点显示名称
 阶段二 — SSH 安装 3x-ui；自动识别发行版注册 systemd service；重置面板凭据
 阶段三 — 对 20 个域名做延迟测试，选最快的作为 SNI
 阶段四 — API 自动配置：生成 X25519 密钥对和 UUID；通过 addClient 接口创建
           VLESS+Reality inbound；将面板限制为仅本地访问
-阶段五 — 打印 VLESS 链接 + 二维码；凭据保存到 ~/.vps/<IP>.txt
+阶段五 — 打印 VLESS 链接 + 二维码（节点名显示在客户端列表中）；凭据保存到 ~/.vps/<IP>.txt
 ```
 
 ### 安全设计
