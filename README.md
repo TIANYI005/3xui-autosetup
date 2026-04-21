@@ -55,14 +55,16 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 
 ## Tested VPS Distros
 
-Verified end-to-end across two different distros:
+Verified end-to-end across four distros:
 
-| Distro | Version | Notes |
-|--------|---------|-------|
-| CentOS Stream | 9 | `ID_LIKE="rhel fedora"` — uses `.rhel` service file |
-| Debian | 12 (Bookworm) | Auto-issues Let's Encrypt IP certificate (6-day, auto-renews) |
+| Distro | Version | Arch | Notes |
+|--------|---------|------|-------|
+| Debian | 12 (Bookworm) | x86_64 | Auto-issues Let's Encrypt IP certificate (6-day, auto-renews) |
+| CentOS Stream | 9 | x86_64 | `ID_LIKE="rhel fedora"` — uses `.rhel` service file |
+| Ubuntu | 22.04 LTS | x86_64 | Uses `.debian` service file |
+| Rocky Linux | 9 | x86_64 | Uses `.rhel` service file |
 
-Other distros supported by 3x-ui (Ubuntu, Rocky Linux, Arch) should work via the same auto-detection logic, but have not been tested with this skill directly.
+Other distros supported by 3x-ui (Arch, AlmaLinux, etc.) should work via the same auto-detection logic, but have not been tested with this skill directly.
 
 ## Prerequisites
 
@@ -220,12 +222,14 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 
 ### 已验证系统
 
-| 系统 | 版本 | 备注 |
-|------|------|------|
-| CentOS Stream | 9 | `ID_LIKE="rhel fedora"`，使用 `.rhel` service 文件 |
-| Debian | 12 (Bookworm) | 自动申请 Let's Encrypt IP 证书（6 天有效期，自动续期） |
+| 系统 | 版本 | 架构 | 备注 |
+|------|------|------|------|
+| Debian | 12 (Bookworm) | x86_64 | 自动申请 Let's Encrypt IP 证书（6 天有效期，自动续期） |
+| CentOS Stream | 9 | x86_64 | `ID_LIKE="rhel fedora"`，使用 `.rhel` service 文件 |
+| Ubuntu | 22.04 LTS | x86_64 | 使用 `.debian` service 文件 |
+| Rocky Linux | 9 | x86_64 | 使用 `.rhel` service 文件 |
 
-其他 3x-ui 支持的发行版（Ubuntu、Rocky Linux、Arch）理论上同样可用，但尚未经过实测。
+其他 3x-ui 支持的发行版（Arch、AlmaLinux 等）理论上同样可用，但尚未经过实测。
 
 ### 客户端兼容性
 
