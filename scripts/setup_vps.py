@@ -1,4 +1,4 @@
-import urllib.request, json, subprocess, ssl, http.cookiejar, base64
+import urllib.request, json, subprocess, ssl, http.cookiejar, base64, uuid as _uuid
 
 PANEL_PORT  = <PANEL_PORT>
 WEBBASEPATH = "<WEBBASEPATH>"
@@ -59,7 +59,14 @@ k    = X25519PrivateKey.generate()
 PRIV = base64.urlsafe_b64encode(k.private_bytes(Encoding.Raw, PrivateFormat.Raw, NoEncryption())).rstrip(b"=").decode()
 PUB  = base64.urlsafe_b64encode(k.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)).rstrip(b"=").decode()
 SID  = subprocess.check_output("openssl rand -hex 8", shell=True).decode().strip()
-UUID = subprocess.check_output("/usr/local/x-ui/bin/xray-linux-amd64 uuid", shell=True).decode().strip()
+UUID = str(_uuid.uuid4())
+
+# 如果 443 已有 inbound，先删除（保证幂等）
+existing = api("/panel/api/inbounds/list")
+for ib in existing.get("obj") or []:
+    if ib.get("port") == PORT:
+        api(f"/panel/api/inbounds/del/{ib['id']}")
+        print(f"Removed existing inbound on port {PORT} (id={ib['id']})")
 
 # 创建空 inbound
 r = api("/panel/api/inbounds/add", {
@@ -80,7 +87,7 @@ r = api("/panel/api/inbounds/add", {
             "xver": 0,
             "serverNames": [SNI],
             "privateKey": PRIV,
-            "shortIds": [SID]
+            "shortIds": [SID, ""]
         },
         "tcpSettings": {"header": {"type": "none"}}
     }),

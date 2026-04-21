@@ -2,7 +2,7 @@ import paramiko, secrets, time, re
 
 IP       = "<IP>"
 SSH_PORT = <SSH_PORT>
-PASSWORD = "<PASSWORD>"
+PASSWORD = <PASSWORD_REPR>
 
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -38,8 +38,11 @@ if "not found" in out.lower() or "could not be found" in out.lower():
 # 3. 启动 x-ui
 run("systemctl enable x-ui 2>/dev/null")
 run("systemctl start x-ui")
-time.sleep(2)
-active, _ = run("systemctl is-active x-ui")
+for _ in range(10):
+    time.sleep(0.5)
+    active, _ = run("systemctl is-active x-ui")
+    if active == "active":
+        break
 if active != "active":
     raise SystemExit(f"[错误] x-ui 无法启动（状态：{active}）\n  → 运行 systemctl status x-ui 查看详情")
 print("x-ui active")
@@ -49,7 +52,11 @@ new_user = "admin"
 new_pass = secrets.token_urlsafe(16)
 run(f"/usr/local/x-ui/x-ui setting -username {new_user} -password {new_pass}")
 run("systemctl restart x-ui")
-time.sleep(2)
+for _ in range(10):
+    time.sleep(0.5)
+    active, _ = run("systemctl is-active x-ui")
+    if active == "active":
+        break
 print("Credentials updated")
 
 # 5. 读取面板设置

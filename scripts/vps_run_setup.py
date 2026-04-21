@@ -2,7 +2,7 @@ import paramiko
 
 IP       = "<IP>"
 SSH_PORT = <SSH_PORT>
-PASSWORD = "<PASSWORD>"
+PASSWORD = <PASSWORD_REPR>
 
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -19,7 +19,7 @@ install_cmd = (
     '(command -v apt-get &>/dev/null && apt-get install -y python3-cryptography) || '
     '(command -v dnf &>/dev/null && dnf install -y python3-cryptography) || '
     '(command -v yum &>/dev/null && yum install -y python3-cryptography) || '
-    'pip3 install cryptography'
+    'pip3 install cryptography --break-system-packages 2>/dev/null || pip3 install cryptography'
 )
 stdin, stdout, stderr = client.exec_command(install_cmd)
 stdout.read()

@@ -2,7 +2,7 @@ import paramiko, time
 
 IP       = "<IP>"
 SSH_PORT = <SSH_PORT>
-PASSWORD = "<PASSWORD>"
+PASSWORD = <PASSWORD_REPR>
 
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -10,7 +10,7 @@ client.connect(IP, port=SSH_PORT, username="root", password=PASSWORD, timeout=15
 
 channel = client.get_transport().open_session()
 channel.set_combine_stderr(True)
-channel.exec_command("bash <(curl -Ls https://raw.githubusercontent.com/MHSanaei/3x-ui/main/install.sh)")
+channel.exec_command("yes n | bash <(curl -Ls https://raw.githubusercontent.com/MHSanaei/3x-ui/main/install.sh)")
 
 output_parts = []
 while True:

@@ -64,9 +64,9 @@ pip3 install paramiko qrcode
 
 用 `Read` 工具读取 `~/.claude/commands/vps/vps_install.py`，将文件中的占位符替换为实际值后用 `Write` 写入 `/tmp/vps_install.py`：
 
-- `<IP>` → VPS IP
+- `<IP>` → VPS IP（字符串，加引号）
 - `<SSH_PORT>` → SSH 端口（数字，不加引号）
-- `<PASSWORD>` → root 密码
+- `<PASSWORD_REPR>` → 用 `repr(password)` 得到的 Python 字面量（含引号），例如密码 `abc"123` 替换为 `'abc"123'`；普通密码直接写 `'密码内容'`
 
 然后运行：
 
@@ -74,7 +74,7 @@ pip3 install paramiko qrcode
 python3 /tmp/vps_install.py
 ```
 
-安装完成后（不论输出内容），读取 `~/.claude/commands/vps/vps_postinstall.py`，同样替换占位符后写入 `/tmp/vps_postinstall.py` 并运行：
+安装完成后（不论输出内容），读取 `~/.claude/commands/vps/vps_postinstall.py`，同样替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_postinstall.py` 并运行：
 
 ```bash
 python3 /tmp/vps_postinstall.py
@@ -90,7 +90,7 @@ python3 /tmp/vps_postinstall.py
 
 ## 阶段三：延迟测试
 
-读取 `~/.claude/commands/vps/vps_latency.py`，替换占位符后写入 `/tmp/vps_latency.py` 并运行：
+读取 `~/.claude/commands/vps/vps_latency.py`，替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_latency.py` 并运行：
 
 ```bash
 python3 /tmp/vps_latency.py
@@ -110,7 +110,7 @@ python3 /tmp/vps_latency.py
 - `<PANEL_USERNAME>`、`<PANEL_PASSWORD>`
 - `<SNI_DOMAIN>`
 
-读取 `~/.claude/commands/vps/vps_run_setup.py`，替换 SSH 占位符后写入 `/tmp/vps_run_setup.py` 并运行：
+读取 `~/.claude/commands/vps/vps_run_setup.py`，替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_run_setup.py` 并运行：
 
 ```bash
 python3 /tmp/vps_run_setup.py
