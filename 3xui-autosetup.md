@@ -52,20 +52,28 @@ pip3 install paramiko qrcode
 
 ## 阶段一：收集信息
 
-**未提供端口时，先做 22 端口探测，再决定是否询问：**
+**未提供端口时，先做 22 端口探测，再决定是否询问（最多重试 3 次，每次间隔 2 秒，应对 VPS 刚重置 SSH 尚未就绪的情况）：**
 
 ```bash
 python3 -c "
-import socket
-s = socket.socket()
-s.settimeout(3)
-print('open' if s.connect_ex(('<IP>', 22)) == 0 else 'closed')
-s.close()
+import socket, time
+for i in range(3):
+    s = socket.socket()
+    s.settimeout(3)
+    r = s.connect_ex(('<IP>', 22))
+    s.close()
+    if r == 0:
+        print('open')
+        break
+    if i < 2:
+        time.sleep(2)
+else:
+    print('closed')
 "
 ```
 
 - 输出 `open` → SSH 端口确认为 22，**跳过端口询问**，告知用户"已自动检测到端口 22"
-- 输出 `closed` → 询问"SSH 端口是多少？"
+- 输出 `closed`（3 次均失败）→ 询问"SSH 端口是多少？"
 
 **其余信息按需询问（已通过参数提供的跳过）：**
 
