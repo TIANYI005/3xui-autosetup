@@ -121,7 +121,7 @@ Claude will run the install script and confirm when done.
 The skill walks through five stages automatically:
 
 ```
-Stage 0 — Wipe any stale /tmp API scripts; check local Python deps (paramiko, qrcode)
+Stage 0 — Check local Python deps (paramiko, qrcode)
 Stage 1 — Probe SSH port 22 (auto-skip if open); ask for node display name
 Stage 2 — Install 3x-ui on VPS; auto-register systemd service for the detected distro;
            reset panel credentials to a random password
@@ -295,7 +295,7 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/insta
 自动走完以下五个阶段：
 
 ```
-阶段零 — 清除 /tmp 下的旧 API 脚本；检查本地 Python 依赖（paramiko、qrcode）
+阶段零 — 检查本地 Python 依赖（paramiko、qrcode）
 阶段一 — 探测 SSH 22 端口（开放则跳过询问）；询问节点显示名称
 阶段二 — SSH 安装 3x-ui；自动识别发行版注册 systemd service；重置面板凭据
 阶段三 — 对 20 个域名做延迟测试，选最快的作为 SNI

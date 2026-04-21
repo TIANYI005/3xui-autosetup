@@ -33,10 +33,9 @@ argument-hint: [ip] [port] [password]
 
 ## 阶段零：检查本地 Python 依赖
 
-用 `Bash` 工具执行（先清理上次遗留的临时脚本，防止旧密码残留）：
+用 `Bash` 工具执行：
 
 ```bash
-rm -f /tmp/setup_vps.py /tmp/vps_run_setup.py
 python3 -c "import paramiko, qrcode" 2>/dev/null && echo "OK" || echo "MISSING"
 ```
 
