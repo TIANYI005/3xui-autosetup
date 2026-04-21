@@ -219,7 +219,7 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 
 - **一条命令搞定** — 传入 IP 和密码，其余全自动（端口自动探测）
 - **SSH 端口自动探测** — 优先探测 22 端口是否开放（3 次重试，每次间隔 2 秒，兼容刚重置的 VPS）；探测到则直接跳过端口询问
-- **自定义节点名称** — 可以给节点起任意名称（如 `搬瓦工-日本`），直接显示在 Shadowrocket、v2rayN 等客户端的节点列表里
+- **自定义节点名称** — 可以给节点起任意名称（如 `Tokyo-01`），直接显示在 Shadowrocket、v2rayN 等客户端的节点列表里
 - **纯 Python 实现** — paramiko 负责 SSH，qrcode 打印二维码，无需任何系统工具
 - **跨平台本地运行** — macOS、Windows、Linux 均可，有 Python 3 即可
 - **跨发行版 VPS** — 自动检测 Debian/Ubuntu、RHEL/Rocky/CentOS/CentOS Stream、Arch，注册对应的 systemd service 文件
