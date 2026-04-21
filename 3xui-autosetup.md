@@ -36,7 +36,7 @@ argument-hint: [ip] [port] [password]
 用 `Bash` 工具执行（先清理上次遗留的临时脚本，防止旧密码残留）：
 
 ```bash
-rm -f /tmp/vps_install.py /tmp/vps_postinstall.py /tmp/vps_latency.py /tmp/setup_vps.py /tmp/vps_run_setup.py
+rm -f /tmp/setup_vps.py /tmp/vps_run_setup.py
 python3 -c "import paramiko, qrcode" 2>/dev/null && echo "OK" || echo "MISSING"
 ```
 
@@ -87,22 +87,16 @@ else:
 
 ## 阶段二：安装 3x-ui
 
-用 `Read` 工具读取 `~/.claude/commands/3xui-autosetup/vps_install.py`，将文件中的占位符替换为实际值后用 `Write` 写入 `/tmp/vps_install.py`：
-
-- `<IP>` → VPS IP（字符串，加引号）
-- `<SSH_PORT>` → SSH 端口（数字，不加引号）
-- `<PASSWORD_REPR>` → 用 `repr(password)` 得到的 Python 字面量（含引号），例如密码 `abc"123` 替换为 `'abc"123'`；普通密码直接写 `'密码内容'`
-
-然后运行：
+直接调用脚本（密码含特殊字符时用单引号包裹）：
 
 ```bash
-python3 /tmp/vps_install.py
+python3 ~/.claude/commands/3xui-autosetup/vps_install.py "<IP>" <SSH_PORT> '<PASSWORD>'
 ```
 
-安装完成后（不论输出内容），读取 `~/.claude/commands/3xui-autosetup/vps_postinstall.py`，同样替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_postinstall.py` 并运行：
+安装完成后运行 postinstall：
 
 ```bash
-python3 /tmp/vps_postinstall.py
+python3 ~/.claude/commands/3xui-autosetup/vps_postinstall.py "<IP>" <SSH_PORT> '<PASSWORD>'
 ```
 
 从输出中提取并记录：
@@ -115,10 +109,10 @@ python3 /tmp/vps_postinstall.py
 
 ## 阶段三：延迟测试
 
-读取 `~/.claude/commands/3xui-autosetup/vps_latency.py`，替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_latency.py` 并运行：
+直接调用脚本：
 
 ```bash
-python3 /tmp/vps_latency.py
+python3 ~/.claude/commands/3xui-autosetup/vps_latency.py "<IP>" <SSH_PORT> '<PASSWORD>'
 ```
 
 选出延迟最低（非 timeout）的域名作为 `<SNI_DOMAIN>`。

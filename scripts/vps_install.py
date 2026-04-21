@@ -1,8 +1,10 @@
-import paramiko, time
+import paramiko, time, sys
 
-IP       = "<IP>"
-SSH_PORT = <SSH_PORT>
-PASSWORD = <PASSWORD_REPR>
+if len(sys.argv) != 4:
+    print("Usage: vps_install.py <IP> <SSH_PORT> <PASSWORD>")
+    sys.exit(1)
+
+IP, SSH_PORT, PASSWORD = sys.argv[1], int(sys.argv[2]), sys.argv[3]
 
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())

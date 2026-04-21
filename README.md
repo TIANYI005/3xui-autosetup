@@ -44,7 +44,7 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 - **Secure by default** — random panel credentials generated on every run; panel port bound to `127.0.0.1` only after setup (never exposed to the internet)
 - **SSH tunnel for panel access** — manage 3x-ui via `ssh -L` forwarding; no public management port
 - **Config saved locally** — credentials and VLESS link written to `~/.vps/<IP>.txt` after each run
-- **Credential safety** — temporary scripts are wiped at the start of every run; no old passwords left in `/tmp`
+- **Credential safety** — scripts run directly from source; only API config scripts are staged to `/tmp` and wiped at the start of every run
 
 ## Client Compatibility
 
@@ -121,7 +121,7 @@ Claude will run the install script and confirm when done.
 The skill walks through five stages automatically:
 
 ```
-Stage 0 — Wipe any stale /tmp scripts; check local Python deps (paramiko, qrcode)
+Stage 0 — Wipe any stale /tmp API scripts; check local Python deps (paramiko, qrcode)
 Stage 1 — Probe SSH port 22 (auto-skip if open); ask for node display name
 Stage 2 — Install 3x-ui on VPS; auto-register systemd service for the detected distro;
            reset panel credentials to a random password
@@ -225,7 +225,7 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 - **跨发行版 VPS** — 自动检测 Debian/Ubuntu、RHEL/Rocky/CentOS/CentOS Stream、Arch，注册对应的 systemd service 文件
 - **智能 SNI 选择** — 对 20 个域名做延迟测试，自动选最快的
 - **安全默认配置** — 每次运行随机生成面板凭据；面板端口在配置完成后绑定到 `127.0.0.1`，从公网彻底消失
-- **凭据安全** — 每次运行开始时自动清除 `/tmp` 下的临时脚本，旧密码不会残留
+- **凭据安全** — 脚本直接从源文件运行；仅 API 配置脚本写入 `/tmp` 并在每次运行开始时清除
 - **本地存档** — 节点链接和面板凭据写入 `~/.vps/<IP>.txt`（权限 600）
 
 ### 已验证系统
@@ -288,7 +288,7 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/insta
 自动走完以下五个阶段：
 
 ```
-阶段零 — 清除 /tmp 下的旧脚本；检查本地 Python 依赖（paramiko、qrcode）
+阶段零 — 清除 /tmp 下的旧 API 脚本；检查本地 Python 依赖（paramiko、qrcode）
 阶段一 — 探测 SSH 22 端口（开放则跳过询问）；询问节点显示名称
 阶段二 — SSH 安装 3x-ui；自动识别发行版注册 systemd service；重置面板凭据
 阶段三 — 对 20 个域名做延迟测试，选最快的作为 SNI
@@ -342,7 +342,7 @@ ssh -L <面板端口>:127.0.0.1:<面板端口> root@<IP>
 重新运行 postinstall 脚本即可——它会自动检测 service 文件、发行版、凭据状态并完成修复：
 
 ```bash
-python3 /tmp/vps_postinstall.py
+python3 ~/.claude/commands/3xui-autosetup/vps_postinstall.py "<IP>" <SSH_PORT> '<PASSWORD>'
 ```
 
 如果 x-ui 二进制完全不存在，才需要重新运行完整安装。
