@@ -126,7 +126,7 @@ PYTHONUTF8=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_latency.py "<IP>
 直接调用脚本（密码含特殊字符时用单引号包裹）：
 
 ```bash
-PYTHONUTF8=1 MSYS_NO_PATHCONV=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_run_setup.py \
+PYTHONUTF8=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_run_setup.py \
   "<IP>" <SSH_PORT> '<PASSWORD>' \
   <PANEL_PORT> "<WEBBASEPATH>" "<PANEL_USERNAME>" "<PANEL_PASSWORD>" \
   "<SNI_DOMAIN>" "<NODE_NAME>"
@@ -141,7 +141,7 @@ PYTHONUTF8=1 MSYS_NO_PATHCONV=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/v
 直接调用脚本，无需读取模板或替换占位符：
 
 ```bash
-PYTHONUTF8=1 MSYS_NO_PATHCONV=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_qr.py \
+PYTHONUTF8=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_qr.py \
   "<LINK>" "<IP>" "<PANEL_PORT>" "<WEBBASEPATH>" "<PANEL_USERNAME>" "<PANEL_PASSWORD>"
 ```
 

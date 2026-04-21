@@ -1,11 +1,25 @@
-import paramiko, sys, json, urllib.request, ssl, http.cookiejar, base64, uuid as _uuid, secrets
+import paramiko, sys, json, urllib.request, ssl, http.cookiejar, base64, uuid as _uuid, secrets, re, io
+try:
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+except AttributeError:
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 if len(sys.argv) != 10:
     print("Usage: vps_run_setup.py <IP> <SSH_PORT> <PASSWORD> <PANEL_PORT> <WEBBASEPATH> <PANEL_USERNAME> <PANEL_PASSWORD> <SNI> <NODE_NAME>")
     sys.exit(1)
 
+def normalize_webbasepath(path):
+    # MSYS2 在 Windows Git Bash 下会把 /abc/ 转换为 C:/Program Files/Git/abc/
+    # 检测到 Windows 绝对路径时，提取最后一段还原为 /segment/
+    if re.match(r'^[A-Za-z]:[/\\]', path):
+        segment = re.split(r'[/\\]', path.rstrip('/\\'))[-1]
+        return '/' + segment + '/'
+    return path
+
 IP, SSH_PORT, PASSWORD = sys.argv[1], int(sys.argv[2]), sys.argv[3]
-PANEL_PORT, WEBBASEPATH = int(sys.argv[4]), sys.argv[5]
+PANEL_PORT, WEBBASEPATH = int(sys.argv[4]), normalize_webbasepath(sys.argv[5])
 PANEL_USERNAME, PANEL_PASSWORD = sys.argv[6], sys.argv[7]
 SNI, NODE_NAME = sys.argv[8], sys.argv[9]
 PROXY_PORT = 443

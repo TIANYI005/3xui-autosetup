@@ -1,4 +1,4 @@
-import qrcode, os, datetime, sys, io
+import qrcode, os, datetime, sys, io, re
 try:
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
@@ -10,7 +10,15 @@ if len(sys.argv) != 7:
     print("Usage: vps_qr.py <LINK> <IP> <PANEL_PORT> <WEBBASEPATH> <PANEL_USERNAME> <PANEL_PASSWORD>")
     sys.exit(1)
 
-LINK, VPS_IP, PANEL_PORT, WEBBASEPATH, PANEL_USER, PANEL_PASS = sys.argv[1:]
+def normalize_webbasepath(path):
+    if re.match(r'^[A-Za-z]:[/\\]', path):
+        segment = re.split(r'[/\\]', path.rstrip('/\\'))[-1]
+        return '/' + segment + '/'
+    return path
+
+LINK, VPS_IP, PANEL_PORT = sys.argv[1], sys.argv[2], sys.argv[3]
+WEBBASEPATH = normalize_webbasepath(sys.argv[4])
+PANEL_USER, PANEL_PASS = sys.argv[5], sys.argv[6]
 
 panel_path  = WEBBASEPATH.strip("/")
 local_panel = f"http://localhost:{PANEL_PORT}" + (f"/{panel_path}" if panel_path else "")
