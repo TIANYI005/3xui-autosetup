@@ -86,7 +86,7 @@ Other distros supported by 3x-ui (Arch, AlmaLinux, etc.) should work via the sam
 **Option 1 — One command:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/dev/install.sh | bash
 ```
 
 **Option 2 — Ask Claude to install it for you:**
@@ -94,8 +94,8 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/insta
 Copy the message below and send it to Claude Code:
 
 ```
-Please install the /3xui-autosetup skill by running:
-curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/install.sh | bash
+Please install or upgrade the /3xui-autosetup skill by running:
+curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/dev/install.sh | bash
 ```
 
 Claude will run the install script and confirm when done.
@@ -273,7 +273,7 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 
 ```bash
 pip install paramiko qrcode pillow
-curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/dev/install.sh | bash
 ```
 
 **方式二 — 让 Claude 帮你安装：**
@@ -281,8 +281,8 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/insta
 把下面这句话复制给 Claude Code：
 
 ```
-请帮我运行以下命令安装 /3xui-autosetup skill：
-curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main/install.sh | bash
+请帮我运行以下命令安装或升级 /3xui-autosetup skill：
+curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/dev/install.sh | bash
 ```
 
 ### 使用
