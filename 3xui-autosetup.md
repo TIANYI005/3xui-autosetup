@@ -10,8 +10,9 @@ argument-hint: [ip] [port] [password]
 用户调用此 skill 时，参数为：`$ARGUMENTS`
 
 - 如果包含三个参数（空格分隔），依次解析为 `<IP> <SSH端口> <密码>`，跳过阶段一的询问
-- 如果只有 IP，跳过询问 IP，继续询问端口和密码
-- 如果为空，从阶段一开始依次询问
+- 如果包含两个参数，解析为 `<IP> <密码>`，端口走自动探测（见阶段一）
+- 如果只有 IP，跳过询问 IP，密码和节点名走阶段一；端口走自动探测
+- 如果为空，从阶段一开始依次询问；端口走自动探测
 
 脚本模板目录：`~/.claude/commands/3xui-autosetup/`
 
@@ -51,14 +52,28 @@ pip3 install paramiko qrcode
 
 ## 阶段一：收集信息
 
-依次询问：
+**未提供端口时，先做 22 端口探测，再决定是否询问：**
+
+```bash
+python3 -c "
+import socket
+s = socket.socket()
+s.settimeout(3)
+print('open' if s.connect_ex(('<IP>', 22)) == 0 else 'closed')
+s.close()
+"
+```
+
+- 输出 `open` → SSH 端口确认为 22，**跳过端口询问**，告知用户"已自动检测到端口 22"
+- 输出 `closed` → 询问"SSH 端口是多少？"
+
+**其余信息按需询问（已通过参数提供的跳过）：**
 
 1. VPS 的 IP 地址是多少？
-2. SSH 端口是多少？（默认 22）
-3. root 密码是多少？（提示：仅用于当前 session，不会存储）
-4. 节点名称是什么？（显示在 Shadowrocket / v2rayN 等客户端里，默认 `vless-reality`）
+2. root 密码是多少？（提示：仅用于当前 session，不会存储）
+3. 节点名称是什么？（显示在 Shadowrocket / v2rayN 等客户端里，默认 `vless-reality`）
 
-收集完毕后展示汇总，请用户确认后继续。
+收集完毕后展示汇总（含探测到的端口），请用户确认后继续。
 
 ---
 
