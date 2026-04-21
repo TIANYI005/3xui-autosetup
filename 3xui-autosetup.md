@@ -56,6 +56,7 @@ pip3 install paramiko qrcode
 1. VPS 的 IP 地址是多少？
 2. SSH 端口是多少？（默认 22）
 3. root 密码是多少？（提示：仅用于当前 session，不会存储）
+4. 节点名称是什么？（显示在 Shadowrocket / v2rayN 等客户端里，默认 `vless-reality`）
 
 收集完毕后展示汇总，请用户确认后继续。
 
@@ -63,7 +64,7 @@ pip3 install paramiko qrcode
 
 ## 阶段二：安装 3x-ui
 
-用 `Read` 工具读取 `~/.claude/commands/vps/vps_install.py`，将文件中的占位符替换为实际值后用 `Write` 写入 `/tmp/vps_install.py`：
+用 `Read` 工具读取 `~/.claude/commands/3xui-autosetup/vps_install.py`，将文件中的占位符替换为实际值后用 `Write` 写入 `/tmp/vps_install.py`：
 
 - `<IP>` → VPS IP（字符串，加引号）
 - `<SSH_PORT>` → SSH 端口（数字，不加引号）
@@ -75,7 +76,7 @@ pip3 install paramiko qrcode
 python3 /tmp/vps_install.py
 ```
 
-安装完成后（不论输出内容），读取 `~/.claude/commands/vps/vps_postinstall.py`，同样替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_postinstall.py` 并运行：
+安装完成后（不论输出内容），读取 `~/.claude/commands/3xui-autosetup/vps_postinstall.py`，同样替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_postinstall.py` 并运行：
 
 ```bash
 python3 /tmp/vps_postinstall.py
@@ -91,7 +92,7 @@ python3 /tmp/vps_postinstall.py
 
 ## 阶段三：延迟测试
 
-读取 `~/.claude/commands/vps/vps_latency.py`，替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_latency.py` 并运行：
+读取 `~/.claude/commands/3xui-autosetup/vps_latency.py`，替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_latency.py` 并运行：
 
 ```bash
 python3 /tmp/vps_latency.py
@@ -103,15 +104,16 @@ python3 /tmp/vps_latency.py
 
 ## 阶段四：API 自动配置
 
-读取 `~/.claude/commands/vps/setup_vps.py`，替换以下占位符后写入 `/tmp/setup_vps.py`：
+读取 `~/.claude/commands/3xui-autosetup/setup_vps.py`，替换以下占位符后写入 `/tmp/setup_vps.py`：
 
-- `<IP>`、`<SSH_PORT>`、`<PASSWORD>`
+- `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>`
 - `<PANEL_PORT>`（数字，不加引号）
 - `<WEBBASEPATH>`
 - `<PANEL_USERNAME>`、`<PANEL_PASSWORD>`
 - `<SNI_DOMAIN>`
+- `<NODE_NAME>` → 用户输入的节点名称（字符串，加引号）
 
-读取 `~/.claude/commands/vps/vps_run_setup.py`，替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_run_setup.py` 并运行：
+读取 `~/.claude/commands/3xui-autosetup/vps_run_setup.py`，替换 `<IP>`、`<SSH_PORT>`、`<PASSWORD_REPR>` 后写入 `/tmp/vps_run_setup.py` 并运行：
 
 ```bash
 python3 /tmp/vps_run_setup.py
@@ -123,7 +125,7 @@ python3 /tmp/vps_run_setup.py
 
 ## 阶段五：输出订阅链接
 
-读取 `~/.claude/commands/vps/vps_qr.py`，替换以下占位符后写入 `/tmp/vps_qr.py`：
+读取 `~/.claude/commands/3xui-autosetup/vps_qr.py`，替换以下占位符后写入 `/tmp/vps_qr.py`：
 
 - `<LINK>`
 - `<IP>`、`<PANEL_PORT>`、`<WEBBASEPATH>`

@@ -6,6 +6,7 @@ USER        = "<PANEL_USERNAME>"
 PASS        = "<PANEL_PASSWORD>"
 VPS_IP      = "<IP>"
 SNI         = "<SNI_DOMAIN>"
+NODE_NAME   = "<NODE_NAME>"
 PORT        = 443
 
 def make_opener(scheme):
@@ -71,7 +72,7 @@ for ib in existing.get("obj") or []:
 # 创建空 inbound
 r = api("/panel/api/inbounds/add", {
     "up": 0, "down": 0, "total": 0,
-    "remark": "vless-reality",
+    "remark": NODE_NAME,
     "enable": True,
     "expiryTime": 0,
     "listen": "",
@@ -121,5 +122,5 @@ link = (f"vless://{UUID}@{VPS_IP}:{PORT}"
         f"&pbk={PUB}&fp=chrome&sni={SNI}"
         f"&sid={SID}&spx=%2F&type=tcp"
         f"&flow=xtls-rprx-vision"
-        f"#vless-reality")
+        f"#{NODE_NAME}")
 print("LINK=" + link)
