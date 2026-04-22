@@ -178,7 +178,7 @@ Local machine                          VPS
      ├─ HTTPS POST /login ─────────────▶│  (panel still on *:PORT before restriction)
      ├─ HTTPS POST /inbounds/add ──────▶│
      ├─ HTTPS POST /inbounds/addClient ▶│
-     ├─ paramiko: x-ui listenIP 127.0.0.1 ▶│
+     ├─ paramiko: listenIP 127.0.0.1 ──▶│
      │                                  │
      └─ print LINK=vless://...          │
 ```
