@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BASE="https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/dev"
+BASE="https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/main"
 CMDS="$HOME/.claude/commands"
 
 echo "Installing /3xui-autosetup skill..."
