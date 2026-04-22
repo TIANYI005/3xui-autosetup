@@ -61,8 +61,15 @@ print(f"\n配置已保存到 {save_path}")
 
 try:
     from PIL import Image
-    png_path = os.path.join(save_dir, f"{VPS_IP}_qr.png")
-    qr.make_image(fill_color="black", back_color="white").save(png_path)
+    png_name = f"{VPS_IP}_qr.png"
+    img = qr.make_image(fill_color="black", back_color="white")
+    png_path = os.path.join(save_dir, png_name)
+    img.save(png_path)
     print(f"二维码图片已保存到 {png_path}")
+    downloads = os.path.expanduser("~/Downloads")
+    if os.path.isdir(downloads):
+        dl_path = os.path.join(downloads, png_name)
+        img.save(dl_path)
+        print(f"二维码图片已复制到 {dl_path}")
 except ImportError:
     pass
