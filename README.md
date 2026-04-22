@@ -44,7 +44,7 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 - **Secure by default** — random panel credentials generated on every run; panel port bound to `127.0.0.1` only after setup (never exposed to the internet)
 - **SSH tunnel for panel access** — manage 3x-ui via `ssh -L` forwarding; no public management port
 - **Config saved locally** — credentials and VLESS link written to `~/.vps/<IP>.txt` after each run
-- **QR code as PNG** — saves `~/.vps/<IP>_qr.png` in addition to terminal ASCII output; reliable on Windows where GBK terminals can't render block characters
+- **QR code as PNG** — saves `~/.vps/<IP>_qr.png` and copies to `~/Downloads/<IP>_qr.png` (if Downloads exists); reliable on Windows where GBK terminals can't render block characters
 - **No /tmp staging** — all API calls made directly from local machine; nothing sensitive is written to `/tmp`
 
 ## Client Compatibility
@@ -243,7 +243,7 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 - **跨发行版 VPS** — 自动检测 Debian/Ubuntu、RHEL/Rocky/CentOS/CentOS Stream、Arch，注册对应的 systemd service 文件
 - **智能 SNI 选择** — 对 20 个域名做延迟测试，自动选最快的
 - **安全默认配置** — 每次运行随机生成面板凭据；面板端口在配置完成后绑定到 `127.0.0.1`，从公网彻底消失
-- **二维码 PNG 输出** — 同时保存 `~/.vps/<IP>_qr.png`，在 Windows GBK 终端无法显示方块字符时仍可正常使用
+- **二维码 PNG 输出** — 保存到 `~/.vps/<IP>_qr.png`，同时复制一份到 `~/Downloads/<IP>_qr.png`（目录存在时）；在 Windows GBK 终端无法显示方块字符时仍可直接打开图片
 - **无 /tmp 暂存** — 所有 API 调用直接从本地发出，不向 VPS 上传或执行任何脚本
 - **本地存档** — 节点链接和面板凭据写入 `~/.vps/<IP>.txt`（权限 600）
 
