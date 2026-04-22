@@ -58,7 +58,7 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 
 ## Tested VPS Distros
 
-Verified end-to-end across four distros:
+Verified end-to-end across five distros:
 
 | Distro | Version | Arch | Notes |
 |--------|---------|------|-------|
@@ -66,8 +66,9 @@ Verified end-to-end across four distros:
 | CentOS Stream | 9 | x86_64 | `ID_LIKE="rhel fedora"` — uses `.rhel` service file |
 | Ubuntu | 22.04 LTS | x86_64 | Uses `.debian` service file |
 | Rocky Linux | 9 | x86_64 | Uses `.rhel` service file |
+| AlmaLinux | 10 | x86_64 | `ID_LIKE="rhel"` — uses `.rhel` service file |
 
-Other distros supported by 3x-ui (Arch, AlmaLinux, etc.) should work via the same auto-detection logic, but have not been tested with this skill directly.
+Other distros supported by 3x-ui (Arch, etc.) should work via the same auto-detection logic, but have not been tested with this skill directly.
 
 ## Prerequisites
 
@@ -77,7 +78,7 @@ Other distros supported by 3x-ui (Arch, AlmaLinux, etc.) should work via the sam
 
 **VPS:**
 - Fresh install with root SSH access
-- Supported distros: Rocky Linux, CentOS Stream, Ubuntu, Debian, Arch (anything 3x-ui supports)
+- Supported distros: Rocky Linux, AlmaLinux, CentOS Stream, Ubuntu, Debian, Arch (anything 3x-ui supports)
 - Port **443** open (used by the VLESS proxy)
 - Port **22** open (SSH management — the only port you need long-term)
 
@@ -255,8 +256,9 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 | CentOS Stream | 9 | x86_64 | `ID_LIKE="rhel fedora"`，使用 `.rhel` service 文件 |
 | Ubuntu | 22.04 LTS | x86_64 | 使用 `.debian` service 文件 |
 | Rocky Linux | 9 | x86_64 | 使用 `.rhel` service 文件 |
+| AlmaLinux | 10 | x86_64 | `ID_LIKE="rhel"`，使用 `.rhel` service 文件 |
 
-其他 3x-ui 支持的发行版（Arch、AlmaLinux 等）理论上同样可用，但尚未经过实测。
+其他 3x-ui 支持的发行版（Arch 等）理论上同样可用，但尚未经过实测。
 
 ### 客户端兼容性
 
@@ -352,7 +354,7 @@ ssh -L <面板端口>:127.0.0.1:<面板端口> root@<IP>
 
 **VPS：**
 - 全新安装，开放 root SSH 访问
-- 支持的发行版：Rocky Linux、CentOS Stream、Ubuntu、Debian、Arch
+- 支持的发行版：Rocky Linux、AlmaLinux、CentOS Stream、Ubuntu、Debian、Arch
 - 开放端口 443（VLESS 代理）和 22（SSH 管理）
 
 ### 故障恢复
