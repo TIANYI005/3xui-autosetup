@@ -19,6 +19,7 @@ One command. No web UI. QR code in your terminal.
 `/3xui-autosetup` is a [Claude Code](https://claude.ai/code) slash command that provisions a complete VLESS+Reality proxy node from scratch — SSH into a fresh VPS, install [3x-ui](https://github.com/MHSanaei/3x-ui), run SNI latency tests, configure via API, and print a scannable QR code — all without touching a web browser.
 
 ```
+/3xui-autosetup <ip> <root-password>
 /3xui-autosetup <ip> <ssh-port> <root-password>
 ```
 
@@ -130,7 +131,8 @@ Stage 2 — Install 3x-ui on VPS; auto-register systemd service for the detected
 Stage 3 — Latency-test 20 SNI domains; pick the fastest
 Stage 4 — Generate X25519 keypair + UUID + SID locally; connect directly to VPS panel
            via HTTPS; create VLESS+Reality inbound via addClient API; restrict panel to localhost
-Stage 5 — Print VLESS link + QR code (ASCII in terminal + PNG saved to ~/.vps/<IP>_qr.png);
+Stage 5 — Print VLESS link + QR code (ASCII in terminal + PNG saved to ~/.vps/<IP>_qr.png
+           and copied to ~/Downloads/<IP>_qr.png if Downloads exists);
            save config to ~/.vps/<IP>.txt
 ```
 
@@ -315,8 +317,8 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/dev/instal
 阶段三 — 对 20 个域名做延迟测试，选最快的作为 SNI
 阶段四 — 本地生成 X25519 密钥对、UUID、SID；直接通过 HTTPS 连接 VPS 面板；
           通过 addClient 接口创建 VLESS+Reality inbound；将面板限制为仅本地访问
-阶段五 — 打印 VLESS 链接 + 终端 ASCII 二维码 + 保存 PNG 到 ~/.vps/<IP>_qr.png；
-          凭据保存到 ~/.vps/<IP>.txt
+阶段五 — 打印 VLESS 链接 + 终端 ASCII 二维码 + 保存 PNG 到 ~/.vps/<IP>_qr.png
+          并复制到 ~/Downloads/<IP>_qr.png（目录存在时）；凭据保存到 ~/.vps/<IP>.txt
 ```
 
 ### 安全设计
