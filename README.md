@@ -53,7 +53,7 @@ Most popular clients (Shadowrocket, v2rayN, NekoBox) use **xray-core**. So the s
 | Client | Platform | Status |
 |--------|----------|--------|
 | Shadowrocket | iOS / macOS | ✅ Verified |
-| v2rayN | Windows | ✅ Compatible |
+| v2rayN | Windows / macOS | ✅ Compatible — keep xray-core updated to latest |
 | NekoBox | Android | ✅ Compatible |
 | Hiddify | macOS / Android | ✅ Compatible |
 
@@ -267,7 +267,7 @@ Reality 协议有两套实现：**xray-core** 和 **sing-box**，两者不兼容
 | 客户端 | 平台 | 状态 |
 |--------|------|------|
 | Shadowrocket | iOS / macOS | ✅ 已验证 |
-| v2rayN | Windows | ✅ 兼容 |
+| v2rayN | Windows / macOS | ✅ 兼容 — 需保持 xray-core 为最新版本 |
 | NekoBox | Android | ✅ 兼容 |
 | Hiddify | macOS / Android | ✅ 兼容 |
 
