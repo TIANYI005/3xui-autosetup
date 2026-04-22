@@ -1,4 +1,10 @@
-import paramiko, time, sys
+import paramiko, time, sys, io
+try:
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+except AttributeError:
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 if len(sys.argv) != 4:
     print("Usage: vps_install.py <IP> <SSH_PORT> <PASSWORD>")

@@ -1,10 +1,24 @@
-import qrcode, os, datetime, sys
+import qrcode, os, datetime, sys, io, re
+try:
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+except AttributeError:
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 if len(sys.argv) != 7:
     print("Usage: vps_qr.py <LINK> <IP> <PANEL_PORT> <WEBBASEPATH> <PANEL_USERNAME> <PANEL_PASSWORD>")
     sys.exit(1)
 
-LINK, VPS_IP, PANEL_PORT, WEBBASEPATH, PANEL_USER, PANEL_PASS = sys.argv[1:]
+def normalize_webbasepath(path):
+    if re.match(r'^[A-Za-z]:[/\\]', path):
+        segment = re.split(r'[/\\]', path.rstrip('/\\'))[-1]
+        return '/' + segment + '/'
+    return path
+
+LINK, VPS_IP, PANEL_PORT = sys.argv[1], sys.argv[2], sys.argv[3]
+WEBBASEPATH = normalize_webbasepath(sys.argv[4])
+PANEL_USER, PANEL_PASS = sys.argv[5], sys.argv[6]
 
 panel_path  = WEBBASEPATH.strip("/")
 local_panel = f"http://localhost:{PANEL_PORT}" + (f"/{panel_path}" if panel_path else "")
@@ -13,7 +27,10 @@ ssh_tunnel  = f"ssh -L {PANEL_PORT}:127.0.0.1:{PANEL_PORT} root@{VPS_IP}"
 qr = qrcode.QRCode()
 qr.add_data(LINK)
 qr.make(fit=True)
-qr.print_ascii(invert=True)
+try:
+    qr.print_ascii(invert=True)
+except (UnicodeEncodeError, Exception):
+    print("[提示] 终端不支持 Unicode 字符，跳过 ASCII 二维码打印，将保存为 PNG")
 
 print("\n========== 节点信息 ==========")
 print(f"VLESS 链接：{LINK}")
@@ -41,3 +58,19 @@ with open(save_path, "w") as f:
 os.chmod(save_path, 0o600)
 os.chmod(save_dir, 0o700)
 print(f"\n配置已保存到 {save_path}")
+
+try:
+    from PIL import Image
+    img = qr.make_image(fill_color="black", back_color="white")
+    png_path = os.path.join(save_dir, f"{VPS_IP}_qr.png")
+    img.save(png_path)
+    print(f"二维码图片已保存到 {png_path}")
+    downloads = os.path.expanduser("~/Downloads")
+    if os.path.isdir(downloads):
+        node_name = LINK.split('#', 1)[-1] if '#' in LINK else VPS_IP
+        safe_name = re.sub(r'[^\w\-.]', '_', node_name)
+        dl_path = os.path.join(downloads, f"{safe_name}_qr.png")
+        img.save(dl_path)
+        print(f"二维码图片已复制到 {dl_path}")
+except ImportError:
+    pass

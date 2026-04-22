@@ -33,28 +33,45 @@ argument-hint: [ip] [port] [password]
 
 ## 阶段零：检查本地 Python 依赖
 
-用 `Bash` 工具执行：
+依次尝试 `python3`、`python`、`py`，确认可用的 Python 命令（要求 3.7+），记录输出结果作为后续统一使用的 `<PYTHON_CMD>`：
 
 ```bash
-python3 -c "import paramiko, qrcode" 2>/dev/null && echo "OK" || echo "MISSING"
+python3 -c "import sys; assert sys.version_info>=(3,7); print('python3')" 2>/dev/null \
+  || python -c "import sys; assert sys.version_info>=(3,7); print('python')" 2>/dev/null \
+  || py -c "import sys; assert sys.version_info>=(3,7); print('py')" 2>/dev/null \
+  || echo "NOT_FOUND"
+```
+
+如果输出 `NOT_FOUND`，提示用户安装 Python 3.7+ 后重试。
+
+检查依赖：
+
+```bash
+<PYTHON_CMD> -c "import paramiko, qrcode, PIL" 2>/dev/null && echo "OK" || echo "MISSING"
 ```
 
 如果输出 `MISSING`：
 
 ```bash
-pip3 install paramiko qrcode
+<PYTHON_CMD> -m pip install paramiko qrcode pillow
 ```
-
-确认本地可用的 Python 命令（`python3` 或 `python`），后续统一使用该命令。
 
 ---
 
 ## 阶段一：收集信息
 
-**未提供端口时，先做 22 端口探测，再决定是否询问（最多重试 3 次，每次间隔 2 秒，应对 VPS 刚重置 SSH 尚未就绪的情况）：**
+**未提供端口时，用 Python 探测 22 端口（最多重试 3 次，每次间隔 2 秒，应对 VPS 刚重置 SSH 尚未就绪的情况）：**
 
 ```bash
-result=closed; for i in 1 2 3; do nc -z -w3 <IP> 22 2>/dev/null && result=open && break; [ $i -lt 3 ] && sleep 2; done; echo $result
+<PYTHON_CMD> -c "
+import socket, sys, time
+for i in range(3):
+    s = socket.socket(); s.settimeout(3)
+    if s.connect_ex(('<IP>', 22)) == 0: s.close(); print('open'); sys.exit()
+    s.close()
+    if i < 2: time.sleep(2)
+print('closed')
+"
 ```
 
 - 输出 `open` → SSH 端口确认为 22，**跳过端口询问**，告知用户"已自动检测到端口 22"
@@ -75,13 +92,13 @@ result=closed; for i in 1 2 3; do nc -z -w3 <IP> 22 2>/dev/null && result=open &
 直接调用脚本（密码含特殊字符时用单引号包裹）：
 
 ```bash
-python3 ~/.claude/commands/3xui-autosetup/vps_install.py "<IP>" <SSH_PORT> '<PASSWORD>'
+PYTHONUTF8=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_install.py "<IP>" <SSH_PORT> '<PASSWORD>'
 ```
 
 安装完成后运行 postinstall：
 
 ```bash
-python3 ~/.claude/commands/3xui-autosetup/vps_postinstall.py "<IP>" <SSH_PORT> '<PASSWORD>'
+PYTHONUTF8=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_postinstall.py "<IP>" <SSH_PORT> '<PASSWORD>'
 ```
 
 从输出中提取并记录：
@@ -97,7 +114,7 @@ python3 ~/.claude/commands/3xui-autosetup/vps_postinstall.py "<IP>" <SSH_PORT> '
 直接调用脚本：
 
 ```bash
-python3 ~/.claude/commands/3xui-autosetup/vps_latency.py "<IP>" <SSH_PORT> '<PASSWORD>'
+PYTHONUTF8=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_latency.py "<IP>" <SSH_PORT> '<PASSWORD>'
 ```
 
 选出延迟最低（非 timeout）的域名作为 `<SNI_DOMAIN>`。
@@ -109,7 +126,7 @@ python3 ~/.claude/commands/3xui-autosetup/vps_latency.py "<IP>" <SSH_PORT> '<PAS
 直接调用脚本（密码含特殊字符时用单引号包裹）：
 
 ```bash
-python3 ~/.claude/commands/3xui-autosetup/vps_run_setup.py \
+PYTHONUTF8=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_run_setup.py \
   "<IP>" <SSH_PORT> '<PASSWORD>' \
   <PANEL_PORT> "<WEBBASEPATH>" "<PANEL_USERNAME>" "<PANEL_PASSWORD>" \
   "<SNI_DOMAIN>" "<NODE_NAME>"
@@ -124,7 +141,7 @@ python3 ~/.claude/commands/3xui-autosetup/vps_run_setup.py \
 直接调用脚本，无需读取模板或替换占位符：
 
 ```bash
-python3 ~/.claude/commands/3xui-autosetup/vps_qr.py \
+PYTHONUTF8=1 <PYTHON_CMD> ~/.claude/commands/3xui-autosetup/vps_qr.py \
   "<LINK>" "<IP>" "<PANEL_PORT>" "<WEBBASEPATH>" "<PANEL_USERNAME>" "<PANEL_PASSWORD>"
 ```
 
