@@ -68,27 +68,43 @@ for _ in range(10):
 print("Credentials updated")
 
 # 5. 修复 sub server 端口冲突（防止 sub server 占用 xray 入站端口）
-sftp = client.open_sftp()
-tmp = tempfile.mktemp(suffix='.db')
-sftp.get('/etc/x-ui/x-ui.db', tmp)
-conn = sqlite3.connect(tmp)
-cur = conn.cursor()
-cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('subPort', '4096')")
-cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('subListen', '127.0.0.1')")
-conn.commit()
-conn.close()
-run("systemctl stop x-ui")
-time.sleep(1)
-sftp.put(tmp, '/etc/x-ui/x-ui.db')
-sftp.close()
-os.unlink(tmp)
-run("systemctl start x-ui")
-for _ in range(10):
-    time.sleep(0.5)
-    active, _ = run("systemctl is-active x-ui")
-    if active == "active":
-        break
-print("Sub server fixed (127.0.0.1:4096)")
+try:
+    db_path_out, _ = run("ls /etc/x-ui/x-ui.db 2>/dev/null || ls /usr/local/x-ui/db/x-ui.db 2>/dev/null || echo NOTFOUND")
+    db_path = db_path_out.strip()
+    if "NOTFOUND" in db_path or not db_path:
+        raise FileNotFoundError("x-ui.db not found at /etc/x-ui/ or /usr/local/x-ui/db/")
+    # 先停服务再操作 db，避免 WAL 锁
+    run("systemctl stop x-ui")
+    time.sleep(1)
+    sftp = client.open_sftp()
+    tmp = tempfile.mktemp(suffix='.db')
+    sftp.get(db_path, tmp)
+    conn = sqlite3.connect(tmp)
+    cur = conn.cursor()
+    cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('subPort', '4096')")
+    cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('subListen', '127.0.0.1')")
+    conn.commit()
+    conn.close()
+    sftp.put(tmp, db_path)
+    sftp.close()
+    os.unlink(tmp)
+    run("systemctl start x-ui")
+    for _ in range(10):
+        time.sleep(0.5)
+        active, _ = run("systemctl is-active x-ui")
+        if active == "active":
+            break
+    print("Sub server fixed (127.0.0.1:4096)")
+except Exception as e:
+    print(f"[警告] Sub server 端口修复失败：{e}")
+    print("  → 手动修复：在 VPS 上运行 x-ui 设置或修改 x-ui.db")
+    # 确保 x-ui 仍在运行
+    run("systemctl start x-ui 2>/dev/null || true")
+    for _ in range(6):
+        time.sleep(0.5)
+        active, _ = run("systemctl is-active x-ui")
+        if active == "active":
+            break
 
 # 6. 读取面板设置
 settings, _ = run("/usr/local/x-ui/x-ui setting -show 2>/dev/null")
