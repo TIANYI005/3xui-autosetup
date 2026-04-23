@@ -1,4 +1,4 @@
-import paramiko, secrets, time, re, sys, io
+import paramiko, secrets, time, re, sys, io, sqlite3, tempfile, os
 try:
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
@@ -67,7 +67,30 @@ for _ in range(10):
         break
 print("Credentials updated")
 
-# 5. 读取面板设置
+# 5. 修复 sub server 端口冲突（防止 sub server 占用 xray 入站端口）
+sftp = client.open_sftp()
+tmp = tempfile.mktemp(suffix='.db')
+sftp.get('/etc/x-ui/x-ui.db', tmp)
+conn = sqlite3.connect(tmp)
+cur = conn.cursor()
+cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('subPort', '4096')")
+cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('subListen', '127.0.0.1')")
+conn.commit()
+conn.close()
+run("systemctl stop x-ui")
+time.sleep(1)
+sftp.put(tmp, '/etc/x-ui/x-ui.db')
+sftp.close()
+os.unlink(tmp)
+run("systemctl start x-ui")
+for _ in range(10):
+    time.sleep(0.5)
+    active, _ = run("systemctl is-active x-ui")
+    if active == "active":
+        break
+print("Sub server fixed (127.0.0.1:4096)")
+
+# 6. 读取面板设置
 settings, _ = run("/usr/local/x-ui/x-ui setting -show 2>/dev/null")
 port_m = re.search(r'port:\s*(\d+)', settings)
 path_m = re.search(r'webBasePath:\s*(\S+)', settings)
