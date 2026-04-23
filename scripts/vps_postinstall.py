@@ -83,6 +83,8 @@ try:
     cur = conn.cursor()
     cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('subPort', '4096')")
     cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('subListen', '127.0.0.1')")
+    # 清除面板 listen 限制，确保 vps_run_setup.py 能从外部访问面板
+    cur.execute("DELETE FROM settings WHERE key='webListen'")
     conn.commit()
     conn.close()
     sftp.put(tmp, db_path)

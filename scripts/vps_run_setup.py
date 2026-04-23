@@ -88,7 +88,7 @@ def api(path, data=None):
 existing = api("/panel/api/inbounds/list")
 for ib in existing.get("obj") or []:
     if ib.get("port") == PROXY_PORT:
-        api(f"/panel/api/inbounds/del/{ib['id']}")
+        api(f"/panel/api/inbounds/del/{ib['id']}", {})
         print(f"Removed existing inbound on port {PROXY_PORT} (id={ib['id']})")
 
 # 生成每个用户的 UUID
