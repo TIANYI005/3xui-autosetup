@@ -113,19 +113,21 @@ Claude will run the install script and confirm when done.
 ```
 /3xui-autosetup <ip> <root-password>
 /3xui-autosetup <ip> <ssh-port> <root-password>
+/3xui-autosetup <ip> <ssh-port> <root-password> | <user:gb,...>
 ```
 
 - **2 arguments** — IP + password; port 22 is probed automatically (3 retries, 2s apart). If detected open, no question asked. If closed, the skill asks for the port.
 - **3 arguments** — IP + SSH port + password; all three are set directly, no prompts for connection info.
 - **Node display name** — always asked during Stage 1, regardless of arguments. Defaults to `vless-reality`.
-- **User management** — asked during Stage 1: set up the owner account (unlimited) and optionally add extra users with per-user traffic quotas.
+- **User management** — optionally pass after `|` as `name:gb` pairs (e.g. `friend:200,family:0`); if omitted, asked interactively during Stage 1. The owner account (unlimited) is always created automatically.
 
 **Examples:**
 
 ```
 /3xui-autosetup 1.2.3.4 mypassword
 /3xui-autosetup 1.2.3.4 22 mypassword
-/3xui-autosetup 1.2.3.4 2222 mypassword
+/3xui-autosetup 1.2.3.4 22 mypassword | friend:200
+/3xui-autosetup 1.2.3.4 22 mypassword | friend:200,family:0,colleague:100
 ```
 
 The skill walks through five stages automatically:
@@ -309,19 +311,21 @@ curl -fsSL https://raw.githubusercontent.com/TIANYI005/3xui-autosetup/dev/instal
 ```
 /3xui-autosetup <IP地址> <root密码>
 /3xui-autosetup <IP地址> <SSH端口> <root密码>
+/3xui-autosetup <IP地址> <SSH端口> <root密码> | <昵称:GB,...>
 ```
 
 - **传 2 个参数**（IP + 密码）：自动探测 22 端口是否开放，开放则直接跳过端口询问；探测失败时会询问端口号
 - **传 3 个参数**（IP + 端口 + 密码）：连接信息全部来自参数，不询问
-- **节点名称**：无论传几个参数，阶段一都会询问节点名称（默认 `vless-reality`）
-- **用户管理**：阶段一询问是否创建多用户（自用无限 + 可选分享账户含流量上限）
+- **`|` 后接用户管理**：格式为 `昵称:GB`，逗号分隔多个用户；`GB=0` 表示无限；自用 owner 账户始终自动创建。省略 `|` 则阶段一交互询问
+- **节点名称**：阶段一询问（默认 `vless-reality`）
 
 **示例：**
 
 ```
 /3xui-autosetup 1.2.3.4 mypassword
 /3xui-autosetup 1.2.3.4 22 mypassword
-/3xui-autosetup 1.2.3.4 2222 mypassword
+/3xui-autosetup 1.2.3.4 22 mypassword | friend:200
+/3xui-autosetup 1.2.3.4 22 mypassword | friend:200,family:0,colleague:100
 ```
 
 自动走完以下五个阶段：
